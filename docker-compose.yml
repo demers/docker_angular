@@ -1,0 +1,17 @@
+version: '2.1'
+
+services:
+  angular:
+    build: .
+    image: angular
+    container_name: angular
+    volumes:
+      - "data_work:/home/ubuntu/work"
+      - "/home/demers/share:/home/ubuntu/share"
+    #restart: always
+    ports:
+      - "22:22"
+    network_mode: "host"
+
+volumes:
+  data_work:
