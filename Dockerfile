@@ -105,20 +105,27 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # Install NVM
 #RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 #RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
+#RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN apt install -y nodejs
 
 # Install NODE
-RUN source /root/.nvm/nvm.sh; \
-    nvm install --lts
+#RUN source /root/.nvm/nvm.sh; \
+    #nvm install --lts
 
 #ENV NODE_VERSION v8.10.0
 #RUN source ~/.nvm/nvm.sh; \
     #nvm install $NODE_VERSION; \
     #nvm use --delete-prefix $NODE_VERSION;
 
-RUN whereis nvm
-
 RUN node --version
+
+RUN npm install -g @angular/cli
+
+# Port pour Angular
+EXPOSE 4200
+
+RUN ng --version
 
 RUN cd ${WORKDIRECTORY} \
     && mkdir work \
