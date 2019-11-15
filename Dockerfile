@@ -51,6 +51,11 @@ RUN echo "export PS1=\"\\e[0;31m $PROJECTNAME\\e[m \$PS1\"" >> ${WORKDIRECTORY}/
 RUN apt-get install -y sudo
 RUN echo "%ubuntu ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+#RUN echo "export XDG_RUNTIME_DIR='/tmp/runtime-ubuntu'" >> ${WORKDIRECTORY}/.bash_profile
+RUN echo "export DISPLAY=:0.0" >> ${WORKDIRECTORY}/.bash_profile
+#RUN echo "export XDG_RUNTIME_DIR='/tmp/runtime-ubuntu'" >> /root/.bash_profile
+RUN echo "export DISPLAY=:0.0" >> /root/.bash_profile
+
 # Install all you want here...
 
 
