@@ -17,7 +17,12 @@ ENV WORKDIRECTORY=/home/ubuntu
 ENV USERNAME=ubuntu
 ENV PASSWORD=ubuntu
 
+ENV EMAIL="fndemers@gmail.com"
+ENV NAME="F.-Nicola Demers"
+
 RUN apt-get update
+
+RUN apt install -y apt-utils
 
 RUN apt-get install -y vim-nox curl git exuberant-ctags
 
@@ -27,6 +32,7 @@ RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pa
 RUN mkdir -p /var/run/sshd
 RUN /usr/bin/ssh-keygen -A
 
+RUN apt-get update
 # Install Java
 RUN apt-get install -qy --no-install-recommends python-dev default-jdk
 
@@ -47,13 +53,14 @@ RUN apt install -y fish
 
 RUN echo "export PS1=\"\\e[0;31m $PROJECTNAME\\e[m \$PS1\"" >> ${WORKDIRECTORY}/.bash_profile
 
+RUN echo "git config --global user.email '$EMAIL'" >> ${WORKDIRECTORY}/.bash_profile
+RUN echo "git config --global user.name '$NAME'" >> ${WORKDIRECTORY}/.bash_profile
+
 # Ajout des droits sudoers
 RUN apt-get install -y sudo
 RUN echo "%ubuntu ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-#RUN echo "export XDG_RUNTIME_DIR='/tmp/runtime-ubuntu'" >> ${WORKDIRECTORY}/.bash_profile
 RUN echo "export DISPLAY=:0.0" >> ${WORKDIRECTORY}/.bash_profile
-#RUN echo "export XDG_RUNTIME_DIR='/tmp/runtime-ubuntu'" >> /root/.bash_profile
 RUN echo "export DISPLAY=:0.0" >> /root/.bash_profile
 
 # Install all you want here...
@@ -67,6 +74,7 @@ EXPOSE 22
 # Installation X11.
 RUN apt install -y xauth vim-gtk
 
+RUN apt-get update
 RUN apt-get install -y build-essential cmake python3-dev
 
 RUN cd ${WORKDIRECTORY} \
@@ -102,6 +110,27 @@ RUN echo "cd ~/" >> ${WORKDIRECTORY}/.bash_profile
 
 RUN apt -qy install gcc g++ make
 
+RUN apt install -y software-properties-common apt-transport-https wget
+
+# Installation de Atom
+RUN cd /tmp \
+    && wget -O atom-amd64.deb https://atom.io/download/deb
+RUN apt install -y gdebi-core
+RUN gdebi --n /tmp/atom-amd64.deb
+
+# Installation de modules Atom
+RUN apm install atom-typescript
+RUN apm install linter
+RUN apm install linter-ui-default
+RUN apm install hyperclick
+RUN apm install intentions
+
+# Installation Visual Studio Code
+RUN wget -q -O - https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN add-apt-repository -y "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+RUN apt-get update
+RUN apt install -y code
+
 RUN apt install -qy npm
 
 # Replace shell with bash so we can source files
@@ -113,15 +142,6 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 #RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
 RUN apt install -y nodejs
-
-# Install NODE
-#RUN source /root/.nvm/nvm.sh; \
-    #nvm install --lts
-
-#ENV NODE_VERSION v8.10.0
-#RUN source ~/.nvm/nvm.sh; \
-    #nvm install $NODE_VERSION; \
-    #nvm use --delete-prefix $NODE_VERSION;
 
 RUN node --version
 
