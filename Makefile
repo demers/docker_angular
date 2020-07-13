@@ -8,6 +8,10 @@ help:
 	echo "    make create"
 	echo
 	echo " to create Dockerfile"
+	echo
+	echo "    make remove"
+	echo
+	echo
 
 create:
 	./dockerfile.bash
