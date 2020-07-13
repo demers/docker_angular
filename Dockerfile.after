@@ -1,0 +1,31 @@
+# Installation de Atom
+RUN cd /tmp \
+    && wget -O atom-amd64.deb https://atom.io/download/deb
+RUN apt install -y gdebi-core
+RUN gdebi --n /tmp/atom-amd64.deb
+
+# Installation de modules Atom
+RUN apm install atom-typescript
+RUN apm install linter
+RUN apm install linter-ui-default
+RUN apm install hyperclick
+RUN apm install intentions
+
+RUN apt install -qy npm
+
+# Replace shell with bash so we can source files
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+# Install NVM
+#RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
+RUN apt install -y nodejs
+
+RUN node --version
+
+RUN npm install -g @angular/cli
+
+# Port pour Angular
+EXPOSE 4200
+
+RUN ng --version
