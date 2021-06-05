@@ -17,7 +17,6 @@ RUN apt install -qy npm
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # Install NVM
-#RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
 RUN apt install -y nodejs
 
